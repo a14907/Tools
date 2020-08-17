@@ -15,7 +15,7 @@ namespace SendFileByEmail
             {
                 Console.WriteLine(@" 
 send email: -f from@xx.com -pwd password -t to@xx.com -a filename
-    just support single file，the params order should the same. support 163 and gamil.
+    just support single file,the params order should the same. support 163 and gamil.
 ");
                 return;
             }
@@ -32,7 +32,7 @@ send email: -f from@xx.com -pwd password -t to@xx.com -a filename
                 Console.WriteLine(@"
 get help: -h
 send email: -f from@xx.com -pwd password -t to@xx.com -a filename
-    just support single file，the params order should the same. support 163 and gamil.
+    just support single file,the params order should the same. support 163 and gamil.
 ");
                 return;
             }
@@ -65,7 +65,7 @@ send email: -f from@xx.com -pwd password -t to@xx.com -a filename
                 stopwatch.Start();
                 client.Send(new System.Net.Mail.MailMessage(from, to)
                 {
-                    Subject = "这是我们这边的最新附件，请注意查收",
+                    Subject = "这是我们这边的最新附件,请注意查收",
                     IsBodyHtml = false,
                     Body = "发送之后请勿直接回复",
                     Attachments = {
