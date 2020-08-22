@@ -16,7 +16,7 @@ namespace FileSplitAndUnion
             }
             var type = args[1];
             var filename = args[3];
-            var size = (type == "-s" ? int.Parse(args[5]) : 0) * 1024 * 1024;
+            var size = (type == "s" ? int.Parse(args[5]) : 0) * 1024 * 1024;
 
             if (type == "s")
             {
@@ -68,7 +68,6 @@ namespace FileSplitAndUnion
                                     break;
                                 }
                                 var readSize = (readlen - readSum) > bufSize ? bufSize : (readlen - readSum);
-                                rawfileStream.Read(buf, 0, (int)readSize);
                                 EnsureRead();
                                 sum += readSize;
                                 readSum += readSize;
@@ -96,7 +95,7 @@ namespace FileSplitAndUnion
 
             void UnionFile()
             {
-                var files = Directory.GetFiles(".", $"{filename}.*");
+                var files = Directory.GetFiles(".").Where(m => m.Contains($"{filename}.")).OrderBy(m => m).ToArray();
                 if (files.Length == 0)
                 {
                     Console.WriteLine("file ready to union not exist.");
@@ -110,18 +109,17 @@ namespace FileSplitAndUnion
                 }
                 using (var targetFile = new FileStream(targetFileName, FileMode.Create))
                 {
-                    foreach (var file in files.OrderBy(m => m))
+                    foreach (var file in files)
                     {
                         using var f = new FileStream(file, FileMode.Open);
-                        int readSum = 0;
                         while (true)
                         {
-                            readSum += f.Read(buf, 0, buf.Length);
-                            if (readSum == 0)
+                            var t = f.Read(buf, 0, buf.Length);
+                            if (t == 0)
                             {
                                 break;
                             }
-                            targetFile.Write(buf, 0, readSum);
+                            targetFile.Write(buf, 0, t);
                         }
                     }
                 }
