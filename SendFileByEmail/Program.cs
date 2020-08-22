@@ -15,7 +15,7 @@ namespace SendFileByEmail
             {
                 Console.WriteLine(@" 
 send email: -f from@xx.com -pwd password -t to@xx.com -a filename
-    just support single file,the params order should the same. support 163 and gamil.
+    just support single file,the params order should the same. support 163 qq and gamil.
 ");
                 return;
             }
@@ -32,7 +32,7 @@ send email: -f from@xx.com -pwd password -t to@xx.com -a filename
                 Console.WriteLine(@"
 get help: -h
 send email: -f from@xx.com -pwd password -t to@xx.com -a filename
-    just support single file,the params order should the same. support 163 and gamil.
+    just support single file,the params order should the same. support 163 qq and gamil.
 ");
                 return;
             }
@@ -49,9 +49,13 @@ send email: -f from@xx.com -pwd password -t to@xx.com -a filename
                 client.EnableSsl = true;
                 client.Port = 465;
             }
+            else if (from.Contains("@qq.com"))
+            {
+                client.Host = "smtp.qq.com";
+            }
             else
             {
-                Console.WriteLine("we just support 163 and gmail!");
+                Console.WriteLine("we just support 163 qq and gmail!");
                 return;
             }
 
