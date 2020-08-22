@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileSplitAndUnion": {
+      "commandName": "Project",
+      "commandLineArgs": "-t s -f node-v12.18.3-x64.msi -s 2"
+    }
+  }
+}
