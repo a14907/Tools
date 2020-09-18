@@ -2,7 +2,7 @@
   "profiles": {
     "FileSplitAndUnion": {
       "commandName": "Project",
-      "commandLineArgs": "-t u -f node-v12.18.3-x64.msi -s 2"
+      "commandLineArgs": "-t u -f resharper.zip -s 2"
     }
   }
 }

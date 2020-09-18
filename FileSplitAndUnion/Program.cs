@@ -18,21 +18,18 @@ namespace FileSplitAndUnion
             var filename = args[3];
             var size = (type == "s" ? int.Parse(args[5]) : 0) * 1024 * 1024;
 
-            if (type == "s")
+            switch (type)
             {
-                SplitFile();
-                return;
+                case "s":
+                    SplitFile();
+                    return;
+                case "u":
+                    UnionFile();
+                    return;
             }
-            else if (type == "u")
-            {
-                UnionFile();
-                return;
-            }
-            else
-            {
-                Console.WriteLine("unsupport operation type.");
-                return;
-            }
+
+            Console.WriteLine("unsupport operation type.");
+            return;
 
             void SplitFile()
             {
@@ -43,12 +40,13 @@ namespace FileSplitAndUnion
                 }
                 int index = 0;
                 long sum = 0;
+
                 var fileInfo = new FileInfo(filename);
                 var fileTotalLen = fileInfo.Length;
                 var bufSize = Math.Min(size, 20 * 1024 * 1024);
                 var buf = new byte[bufSize];
 
-                using (var rawfileStream = new FileStream(filename, FileMode.Open))
+                using (var rawFileStream = new FileStream(filename, FileMode.Open))
                 {
                     while (true)
                     {
@@ -56,18 +54,18 @@ namespace FileSplitAndUnion
                         {
                             break;
                         }
-                        var newfileName = $"{filename}.{index}";
-                        var readlen = (fileTotalLen - sum) > size ? size : fileTotalLen - sum;
-                        using (var writeFileStream = new FileStream(newfileName, FileMode.OpenOrCreate))
+                        var newFileName = $"{filename}.{index}";
+                        var chunkFileSize = (fileTotalLen - sum) > size ? size : fileTotalLen - sum;
+                        using (var writeFileStream = new FileStream(newFileName, FileMode.OpenOrCreate))
                         {
                             long readSum = 0;
                             while (true)
                             {
-                                if (readSum >= readlen)
+                                if (readSum >= chunkFileSize)
                                 {
                                     break;
                                 }
-                                var readSize = (readlen - readSum) > bufSize ? bufSize : (readlen - readSum);
+                                var readSize = (chunkFileSize - readSum) > bufSize ? bufSize : (chunkFileSize - readSum);
                                 EnsureRead();
                                 sum += readSize;
                                 readSum += readSize;
@@ -82,7 +80,7 @@ namespace FileSplitAndUnion
                                         {
                                             break;
                                         }
-                                        s += rawfileStream.Read(buf, s, (int)readSize - s);
+                                        s += rawFileStream.Read(buf, s, (int)readSize - s);
                                     }
                                 }
                             }
@@ -95,7 +93,11 @@ namespace FileSplitAndUnion
 
             void UnionFile()
             {
-                var files = Directory.GetFiles(".").Where(m => m.Contains($"{filename}.")).OrderBy(m => m).ToArray();
+                var files = Directory.GetFiles(".").Where(m => m.Contains($"{filename}.")).OrderBy(m =>
+                {
+                    var arr = m.Split('.');
+                    return int.Parse(arr[^1]);
+                }).ToArray();
                 if (files.Length == 0)
                 {
                     Console.WriteLine("file ready to union not exist.");
