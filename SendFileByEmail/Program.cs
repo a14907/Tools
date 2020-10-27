@@ -8,7 +8,7 @@ namespace SendFileByEmail
 {
     class Program
     {
-        static async System.Threading.Tasks.Task Main(string[] args)
+        static async System.Threading.Tasks.Task<int> Main(string[] args)
         {
             string from = string.Empty, to = string.Empty, pwd = string.Empty, attachFileName = string.Empty;
             if (args.Length == 1 && args[0] == "-h")
@@ -17,7 +17,7 @@ namespace SendFileByEmail
 send email: -f from@xx.com -pwd password -t to@xx.com -a filename
     just support single file,the params order should the same. support 163 qq and gamil.
 ");
-                return;
+                return 1;
             }
             else if (args.Length == 8 && args[0] == "-f" && args[2] == "-pwd" && args[4] == "-t" && args[6] == "-a")
             {
@@ -34,7 +34,7 @@ get help: -h
 send email: -f from@xx.com -pwd password -t to@xx.com -a filename
     just support single file,the params order should the same. support 163 qq and gamil.
 ");
-                return;
+                return 1;
             }
 
             using var client = new SmtpClient();
@@ -56,7 +56,7 @@ send email: -f from@xx.com -pwd password -t to@xx.com -a filename
             else
             {
                 Console.WriteLine("we just support 163 qq and gmail!");
-                return;
+                return 1;
             }
 
             client.Credentials = new NetworkCredential(from, pwd);
@@ -88,6 +88,7 @@ send email: -f from@xx.com -pwd password -t to@xx.com -a filename
                 Console.WriteLine("total seconds:" + stopwatch.Elapsed.TotalSeconds);
             }
 
+            return 0;
         }
     }
 }
